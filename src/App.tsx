@@ -13,14 +13,12 @@ function App() {
         <a
           className="App-link"
           href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+          target="_blank" rel="noopener noreferrer"
         >
           Learn React
         </a>
       </header>
 
-      
       <div><img src="123" alt="" /></div>
     </div>
   );
