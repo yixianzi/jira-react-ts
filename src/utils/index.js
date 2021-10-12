@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 export const isFalsy = (value) => (value === 0 ? false : !value);
 
 // 在一个函数里，改变传入的对象本身是不好的
@@ -13,4 +14,39 @@ export const cleanObject = (object) => {
     }
   });
   return result;
+};
+
+//
+export const useMount = (callback) => {
+  useEffect(() => {
+    callback();
+  }, []);
+};
+
+// export const useDebounce = (value, delay) => {
+// 会出现多次创建，未知？？
+//   const [debounceParam, setDebounceParam] = useState(value);
+//  let timer
+//   useEffect(() => {
+//     if (timer) {
+//       clearTimeout(timer);
+//     }
+//     timer = setTimeout(() => {
+//       setDebounceParam(value);
+//     }, delay);
+//   }, [value]);
+//   return debounceParam;
+// };
+
+export const useDebounce = (value, delay) => {
+  const [debounceParam, setDebounceParam] = useState(value);
+  useEffect(() => {
+    // 每次在value变化以后，设置一个定时器
+    const timer = setTimeout(() => {
+      setDebounceParam(value);
+    }, delay);
+    // 每次在上一个useEffect处理完之后再运行
+    return () => clearTimeout(timer);
+  }, [value, delay]);
+  return debounceParam;
 };
