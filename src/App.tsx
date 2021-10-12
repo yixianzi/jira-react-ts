@@ -19,6 +19,9 @@ function App() {
           Learn React
         </a>
       </header>
+
+      
+      <div><img src="123" alt="" /></div>
     </div>
   );
 }
