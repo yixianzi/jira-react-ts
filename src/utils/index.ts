@@ -52,3 +52,48 @@ export const useDebounce = <V>(value: V, delay?: number) => {
   }, [value, delay]);
   return debounceParam;
 };
+
+interface Person {
+  name: string;
+  age: number;
+}
+export const useMyArray = (persons: Person[]) => {
+  const [value, setValue] = useState(persons);
+  const add = (p: Person) => {
+    const newV = [...value, p];
+    setValue(newV);
+  };
+
+  const removeIndex = (index: number) => {
+    const newV = value.slice();
+    newV.splice(index, 1);
+    setValue(newV);
+  };
+
+  const clear = () => {
+    setValue([]);
+  };
+
+  return {
+    value,
+    add,
+    removeIndex,
+    clear,
+  };
+};
+
+// 对比上面的方法，使用了泛型，传入的类型就可以灵活了，适用于多种数组
+export const useArray = <T>(initialArray: T[]) => {
+  const [value, setValue] = useState(initialArray);
+  return {
+    value,
+    setValue,
+    add: (item: T) => setValue([...value, item]),
+    clear: () => setValue([]),
+    removeIndex: (index: number) => {
+      const copy = [...value];
+      copy.splice(index, 1);
+      setValue(copy);
+    },
+  };
+};
