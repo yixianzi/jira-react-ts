@@ -11839,7 +11839,7 @@ type-fest@^0.11.0:
 
 type-fest@^0.18.0:
   version "0.18.1"
-  resolved "https://registry.nlark.com/type-fest/download/type-fest-0.18.1.tgz#db4bc151a4a2cf4eebf9add5db75508db6cc841f"
+  resolved "https://registry.npmmirror.com/type-fest/download/type-fest-0.18.1.tgz?cache=0&sync_timestamp=1634020561111&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Ftype-fest%2Fdownload%2Ftype-fest-0.18.1.tgz#db4bc151a4a2cf4eebf9add5db75508db6cc841f"
   integrity sha1-20vBUaSiz07r+a3V23VQjbbMhB8=
 
 type-fest@^0.20.2:
@@ -11897,10 +11897,15 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript@^4.1.2, typescript@^4.4.3:
+typescript@^4.1.2:
   version "4.4.3"
   resolved "https://registry.npmmirror.com/typescript/download/typescript-4.4.3.tgz?cache=0&sync_timestamp=1633937196676&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Ftypescript%2Fdownload%2Ftypescript-4.4.3.tgz#bdc5407caa2b109efd4f82fe130656f977a29324"
   integrity sha1-vcVAfKorEJ79T4L+EwZW+XeikyQ=
+
+typescript@^4.4.3:
+  version "4.4.4"
+  resolved "https://registry.npmmirror.com/typescript/download/typescript-4.4.4.tgz#2cd01a1a1f160704d3101fd5a58ff0f9fcb8030c"
+  integrity sha1-LNAaGh8WBwTTEB/VpY/w+fy4Aww=
 
 unicode-canonical-property-names-ecmascript@^1.0.4:
   version "1.0.4"
@@ -12008,7 +12013,7 @@ upath@^1.1.1, upath@^1.1.2, upath@^1.2.0:
 
 update-notifier@^5.1.0:
   version "5.1.0"
-  resolved "https://registry.npm.taobao.org/update-notifier/download/update-notifier-5.1.0.tgz?cache=0&sync_timestamp=1612086205086&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fupdate-notifier%2Fdownload%2Fupdate-notifier-5.1.0.tgz#4ab0d7c7f36a231dd7316cf7729313f0214d9ad9"
+  resolved "https://registry.nlark.com/update-notifier/download/update-notifier-5.1.0.tgz#4ab0d7c7f36a231dd7316cf7729313f0214d9ad9"
   integrity sha1-SrDXx/NqIx3XMWz3cpMT8CFNmtk=
   dependencies:
     boxen "^5.0.0"
