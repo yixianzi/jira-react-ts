@@ -10,7 +10,7 @@ import right from "assets/right.svg";
 export const UnauthenticatedApp = () => {
   const [isRegister, setIsRegister] = useState(false);
   return (
-    <Container style={{ display: "flex", justifyContent: "center" }}>
+    <Container>
       <Header />
       <Background />
       <ShadowCard>
