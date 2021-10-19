@@ -1,11 +1,9 @@
 import { SearchPanel } from "./search-panel";
-import { List, Project } from "./list";
-import { useEffect, useState } from "react";
+import { List } from "./list";
+import { useState } from "react";
 import React from "react";
-import { cleanObject, useDebounce, useMount } from "utils";
-import { useHttp } from "utils/http";
+import { useDebounce } from "utils";
 import styled from "@emotion/styled";
-import { useAsync } from "utils/use-async";
 import { useProject } from "utils/project";
 import { useUsers } from "utils/user";
 
@@ -15,7 +13,7 @@ export const ProjectListScreen = () => {
     personId: "",
   });
   const debouncedParam = useDebounce(param, 200);
-  const { isLoading, error, data: list } = useProject(debouncedParam);
+  const { isLoading, data: list } = useProject(debouncedParam);
 
   const { data: users } = useUsers();
 
