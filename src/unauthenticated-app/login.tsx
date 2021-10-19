@@ -24,6 +24,13 @@ export const LoginScreen = ({
   };
   return (
     <Form onFinish={handleSubmit}>
+      <LongButton
+        onClick={() => {
+          throw new Error("抛出异常");
+        }}
+      >
+        抛出异常
+      </LongButton>
       <Form.Item
         name={"username"}
         rules={[{ required: true, message: "请输入用户名" }]}
