@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 export const isFalsy = (value: unknown) => (value === 0 ? false : !value);
 
 export const isVoid = (value: unknown) =>
@@ -101,21 +101,47 @@ export const useArray = <T>(initialArray: T[]) => {
   };
 };
 
+// 此种写法虽然能够保证oldTitle不变，但不直观，涉及闭包，有心智负担，所以用useRef进行优化
+// export const useDocumentTitle = (
+//   title: string,
+//   keepOnUnmount: boolean = true
+// ) => {
+//   const oldTitle = document.title;
+
+//   // 页面加载时：oldTitle是旧TITLE
+//   // 加载后：oldTitle是新title
+
+//   useEffect(() => {
+//     document.title = title;
+//   }, [title]);
+
+//   useEffect(() => {
+//     return () => {
+//       if (!keepOnUnmount) {
+//         // 如果不指定依赖，读到的就是旧title
+//         document.title = oldTitle;
+//       }
+//     };
+//     // eslint-disable-next-line react-hooks/exhaustive-deps
+//   }, []);
+// };
+
 export const useDocumentTitle = (
   title: string,
   keepOnUnmount: boolean = true
 ) => {
-  const oldTitle = document.title;
+  const oldTitle = useRef(document.title).current; // useRef生成的值在组件整个生命周期中不变,current属性提取值
 
   useEffect(() => {
     document.title = title;
   }, [title]);
+
   useEffect(() => {
     return () => {
       if (!keepOnUnmount) {
+        // 如果不指定依赖，读到的就是旧title
         document.title = oldTitle;
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [keepOnUnmount, oldTitle]);
 };
