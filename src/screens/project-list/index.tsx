@@ -9,11 +9,7 @@ import { useUsers } from "utils/user";
 import { useUrlQueryParam } from "utils/url";
 
 export const ProjectListScreen = () => {
-  const [, setParam] = useState({
-    name: "",
-    personId: "",
-  });
-  const [param] = useUrlQueryParam(["name", "personId"]);
+  const [param, setParam] = useUrlQueryParam(["name", "personId"]);
   const debouncedParam = useDebounce(param, 200);
   const { isLoading, data: list } = useProject(debouncedParam);
 
