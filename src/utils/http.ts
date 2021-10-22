@@ -1,46 +1,42 @@
-import qs from "qs";
-import * as auth from "auth-provider";
-import { useAuth } from "context/auth-context";
+import qs from 'qs'
+import * as auth from 'auth-provider'
+import { useAuth } from 'context/auth-context'
 
-const apiUrl = process.env.REACT_APP_API_URL;
+const apiUrl = process.env.REACT_APP_API_URL
 interface Config extends RequestInit {
-  token?: string;
-  data?: object;
+  token?: string
+  data?: object
 }
-export const http = async (
-  endpont: string,
-  { data, token, headers, ...customConfig }: Config = {}
-) => {
+export const http = async (endpont: string, { data, token, headers, ...customConfig }: Config = {}) => {
   const config = {
-    method: "GET",
+    method: 'GET',
     headers: {
-      Authorization: token ? `${token}` : "",
-      "Content-Type": data ? "application/json" : "",
+      Authorization: token ? `${token}` : '',
+      'Content-Type': data ? 'application/json' : ''
     },
-    ...customConfig, // 可以覆盖前面的method
-  };
-  if (config.method.toUpperCase() === "GET") {
-    endpont += `?${qs.stringify(data)}`;
+    ...customConfig // 可以覆盖前面的method
+  }
+  if (config.method.toUpperCase() === 'GET') {
+    endpont += `?${qs.stringify(data)}`
   } else {
-    config.body = JSON.stringify(data || {});
+    config.body = JSON.stringify(data || {})
   }
   return window.fetch(`${apiUrl}/${endpont}`, config).then(async (response) => {
     if (response.status === 401) {
-      await auth.logout();
-      window.location.reload();
-      return Promise.reject({ message: "请重新登录" });
+      await auth.logout()
+      window.location.reload()
+      return Promise.reject({ message: '请重新登录' })
     }
-    const data = await response.json();
+    const data = await response.json()
     if (response.ok) {
-      return data;
+      return data
     } else {
-      return Promise.reject(data);
+      return Promise.reject(data)
     }
-  });
-};
+  })
+}
 
 export const useHttp = () => {
-  const { user } = useAuth();
-  return (...[endpoint, config]: Parameters<typeof http>) =>
-    http(endpoint, { ...config, token: user?.token });
-};
+  const { user } = useAuth()
+  return (...[endpoint, config]: Parameters<typeof http>) => http(endpoint, { ...config, token: user?.token })
+}

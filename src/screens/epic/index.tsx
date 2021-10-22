@@ -1,5 +1,5 @@
-import React from "react";
+import React from 'react'
 
 export const EpicScreen = () => {
-  return <h1>任务组</h1>;
-};
+  return <h1>任务组</h1>
+}

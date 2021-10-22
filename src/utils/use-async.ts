@@ -1,74 +1,71 @@
-import { useState } from "react";
+import { useState } from 'react'
 interface State<D> {
-  error: Error | null;
-  data: D | null;
-  stat: "idle" | "loading" | "error" | "success";
+  error: Error | null
+  data: D | null
+  stat: 'idle' | 'loading' | 'error' | 'success'
 }
 
 const defaultInitialState: State<null> = {
-  stat: "idle",
+  stat: 'idle',
   data: null,
-  error: null,
-};
+  error: null
+}
 
 const defaultConfig = {
-  throwOnError: false,
-};
+  throwOnError: false
+}
 
-export const useAsync = <D>(
-  initialState?: State<D>,
-  initalConfig?: typeof defaultConfig
-) => {
-  const config = { ...defaultConfig, ...initalConfig };
+export const useAsync = <D>(initialState?: State<D>, initalConfig?: typeof defaultConfig) => {
+  const config = { ...defaultConfig, ...initalConfig }
 
   const [state, setState] = useState<State<D>>({
     ...defaultInitialState,
-    ...initialState,
-  });
+    ...initialState
+  })
 
   const setData = (data: D) =>
     setState({
       data,
-      stat: "success",
-      error: null,
-    });
+      stat: 'success',
+      error: null
+    })
 
   const setError = (error: Error) =>
     setState({
       error,
-      stat: "error",
-      data: null,
-    });
+      stat: 'error',
+      data: null
+    })
 
   // 用来出发异步请求
   const run = (promise: Promise<D>) => {
     if (!promise || !promise.then) {
-      throw new Error("请传入Promise 类型数据"); // 会打断一切进程，下面不会执行
+      throw new Error('请传入Promise 类型数据') // 会打断一切进程，下面不会执行
     }
-    setState({ ...state, stat: "loading" });
+    setState({ ...state, stat: 'loading' })
     return promise
       .then((data) => {
-        setData(data);
-        return data;
+        setData(data)
+        return data
       })
       .catch((error) => {
         // catch会消化异常，如果不主动抛出，外面是就接收不到异常的
-        setError(error);
+        setError(error)
         if (config.throwOnError) {
-          return Promise.reject(error); // 主动抛出
+          return Promise.reject(error) // 主动抛出
         }
-        return error;
-      });
-  };
+        return error
+      })
+  }
 
   return {
-    isIdle: state.stat === "idle",
-    isLoading: state.stat === "loading",
-    isError: state.stat === "error",
-    isSuccess: state.stat === "success",
+    isIdle: state.stat === 'idle',
+    isLoading: state.stat === 'loading',
+    isError: state.stat === 'error',
+    isSuccess: state.stat === 'success',
     run,
     setData,
     setError,
-    ...state,
-  };
-};
+    ...state
+  }
+}
