@@ -23,6 +23,10 @@ export const useAsync = <D>(initialState?: State<D>, initalConfig?: typeof defau
     ...initialState
   })
 
+  const [retry, setRetry] = useState(() => () => {
+    // 不能直接返回一个函数，否则是惰性初始化，会先执行函数
+  })
+
   const setData = (data: D) =>
     setState({
       data,
@@ -38,10 +42,15 @@ export const useAsync = <D>(initialState?: State<D>, initalConfig?: typeof defau
     })
 
   // 用来出发异步请求
-  const run = (promise: Promise<D>) => {
+  const run = (promise: Promise<D>, runConfig?: { retry: () => Promise<D> }) => {
     if (!promise || !promise.then) {
       throw new Error('请传入Promise 类型数据') // 会打断一切进程，下面不会执行
     }
+    setRetry(() => () => {
+      if (runConfig) {
+        run(runConfig?.retry(), runConfig)
+      }
+    })
     setState({ ...state, stat: 'loading' })
     return promise
       .then((data) => {
@@ -64,6 +73,8 @@ export const useAsync = <D>(initialState?: State<D>, initalConfig?: typeof defau
     isError: state.stat === 'error',
     isSuccess: state.stat === 'success',
     run,
+    // retry调用时，重新跑run，刷新state
+    retry,
     setData,
     setError,
     ...state

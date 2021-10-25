@@ -10,7 +10,7 @@ import { useProjectsSearchParams } from './util'
 export const ProjectListScreen = () => {
   const [param, setParam] = useProjectsSearchParams()
   const debouncedParam = useDebounce(param, 200)
-  const { isLoading, data: list } = useProject(debouncedParam)
+  const { isLoading, data: list, retry } = useProject(debouncedParam)
 
   const { data: users } = useUsers()
   useDocumentTitle('项目列表', false)
@@ -19,7 +19,7 @@ export const ProjectListScreen = () => {
     <Container>
       <h1>项目列表</h1>
       <SearchPanel param={param} setParam={setParam} users={users || []} />
-      <List dataSource={list || []} users={users || []} loading={isLoading} />
+      <List refresh={retry} dataSource={list || []} users={users || []} loading={isLoading} />
     </Container>
   )
 }
