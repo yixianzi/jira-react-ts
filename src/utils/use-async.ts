@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useMountedRef } from 'utils'
 interface State<D> {
   error: Error | null
   data: D | null
@@ -22,6 +23,8 @@ export const useAsync = <D>(initialState?: State<D>, initalConfig?: typeof defau
     ...defaultInitialState,
     ...initialState
   })
+
+  const mountedRef = useMountedRef()
 
   const [retry, setRetry] = useState(() => () => {
     // 不能直接返回一个函数，否则是惰性初始化，会先执行函数
@@ -54,7 +57,9 @@ export const useAsync = <D>(initialState?: State<D>, initalConfig?: typeof defau
     setState({ ...state, stat: 'loading' })
     return promise
       .then((data) => {
-        setData(data)
+        if (mountedRef.current) {
+          setData(data)
+        }
         return data
       })
       .catch((error) => {
