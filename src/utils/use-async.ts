@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useReducer, useState } from 'react'
 import { useMountedRef } from 'utils'
 interface State<D> {
   error: Error | null
@@ -16,15 +16,21 @@ const defaultConfig = {
   throwOnError: false
 }
 
+const useSafeDispatch = <T>(dispatch: (...args: T[]) => void) => {
+  const mountedRef = useMountedRef()
+  // 组件没退出销毁才会设置data，避免在已卸载组件上赋值
+  return useCallback((...args: T[]) => (mountedRef.current ? dispatch(...args) : void 0), [mountedRef, dispatch])
+}
+
 export const useAsync = <D>(initialState?: State<D>, initalConfig?: typeof defaultConfig) => {
   const config = { ...defaultConfig, ...initalConfig }
 
-  const [state, setState] = useState<State<D>>({
+  const [state, dispatch] = useReducer((state: State<D>, action: Partial<State<D>>) => ({ ...state, ...action }), {
     ...defaultInitialState,
     ...initialState
   })
 
-  const mountedRef = useMountedRef()
+  const safeDispatch = useSafeDispatch(dispatch)
 
   const [retry, setRetry] = useState(() => () => {
     // 不能直接返回一个函数，否则是惰性初始化，会先执行函数
@@ -32,22 +38,22 @@ export const useAsync = <D>(initialState?: State<D>, initalConfig?: typeof defau
 
   const setData = useCallback(
     (data: D) =>
-      setState({
+      safeDispatch({
         data,
         stat: 'success',
         error: null
       }),
-    []
+    [safeDispatch]
   )
 
   const setError = useCallback(
     (error: Error) =>
-      setState({
+      safeDispatch({
         error,
         stat: 'error',
         data: null
       }),
-    []
+    [safeDispatch]
   )
 
   // 用来出发异步请求
@@ -62,13 +68,13 @@ export const useAsync = <D>(initialState?: State<D>, initalConfig?: typeof defau
         }
       })
       // setState({ ...state, stat: 'loading' })
-      setState((preState) => ({ ...preState, stat: 'loading' }))
+      safeDispatch({ stat: 'loading' })
       return promise
         .then((data) => {
-          if (mountedRef.current) {
-            // 组件没退出销毁才会设置data，避免在已卸载组件上赋值
-            setData(data)
-          }
+          // if (mountedRef.current) {
+          // 组件没退出销毁才会设置data，避免在已卸载组件上赋值
+          setData(data)
+          // }
           return data
         })
         .catch((error) => {
@@ -80,7 +86,7 @@ export const useAsync = <D>(initialState?: State<D>, initalConfig?: typeof defau
           return error
         })
     },
-    [config.throwOnError, mountedRef, setData, setError]
+    [config.throwOnError, safeDispatch, setData, setError]
   )
 
   return {
