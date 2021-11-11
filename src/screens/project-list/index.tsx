@@ -7,29 +7,26 @@ import { useProject } from 'utils/project'
 import { useUsers } from 'utils/user'
 import { useProjectsSearchParams } from './util'
 import { Button, Row } from 'antd'
+import { projectListActions } from './project-list.slice'
+import { useDispatch } from 'react-redux'
 
-export const ProjectListScreen = (props: { setProjectModalOpen: (isOpen: boolean) => void }) => {
+export const ProjectListScreen = () => {
   const [param, setParam] = useProjectsSearchParams()
   const debouncedParam = useDebounce(param, 200)
   const { isLoading, data: list, retry } = useProject(debouncedParam)
 
   const { data: users } = useUsers()
+  const dispatch = useDispatch()
   useDocumentTitle('项目列表', false)
 
   return (
     <Container>
       <Row justify={'space-between'}>
         <h2>项目列表</h2>
-        <Button onClick={() => props.setProjectModalOpen(true)}>创建项目</Button>
+        <Button onClick={() => dispatch(projectListActions.openProjectModal())}>创建项目</Button>
       </Row>
       <SearchPanel param={param} setParam={setParam} users={users || []} />
-      <List
-        setProjectModalOpen={props.setProjectModalOpen}
-        refresh={retry}
-        dataSource={list || []}
-        users={users || []}
-        loading={isLoading}
-      />
+      <List refresh={retry} dataSource={list || []} users={users || []} loading={isLoading} />
     </Container>
   )
 }
