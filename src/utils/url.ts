@@ -25,3 +25,13 @@ export const useUrlQueryParam = <K extends string>(keys: K[]) => {
     }
   ] as const
 }
+
+export const useProjectModal = () => {
+  const [{ projectCreate }, setProjectCreate] = useUrlQueryParam(['projectCreate'])
+
+  const open = () => setProjectCreate({ projectCreate: true })
+  const close = () => setProjectCreate({ projectCreate: undefined })
+
+  // 返回三个以下时，可以返回tuple，三个以上考虑对象
+  return { projectModalOpen: projectCreate === 'true', open, close } as const
+}
