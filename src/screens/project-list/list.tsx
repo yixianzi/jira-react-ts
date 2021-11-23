@@ -19,11 +19,13 @@ export interface Project {
 
 interface ListProps extends TableProps<Project> {
   users: User[]
-  refresh?: () => void
 }
 
 export const List = ({ users, ...props }: ListProps) => {
   const { mutate } = useEditProject()
+  const { startEdit } = useProjectModal()
+  const pinProject = (id: number) => (pin: boolean) => mutate({ id, pin })
+  const editProject = (id: number) => () => startEdit(id)
   const { open } = useProjectModal()
   return (
     <Table
@@ -37,7 +39,7 @@ export const List = ({ users, ...props }: ListProps) => {
               <Pin
                 checked={project.pin}
                 onCheckedChange={(pin) => {
-                  mutate({ id: project.id, pin }).then(props.refresh)
+                  mutate({ id: project.id, pin })
                 }}
               />
             )
@@ -73,8 +75,11 @@ export const List = ({ users, ...props }: ListProps) => {
                 overlay={
                   <Menu>
                     <Menu.Item key={'edit'}>
-                      <ButtonNoPadding onClick={open} type={'link'}>
+                      <ButtonNoPadding onClick={editProject(project.id)} type={'link'}>
                         编辑
+                      </ButtonNoPadding>
+                      <ButtonNoPadding onClick={open} type={'link'}>
+                        删除
                       </ButtonNoPadding>
                     </Menu.Item>
                   </Menu>

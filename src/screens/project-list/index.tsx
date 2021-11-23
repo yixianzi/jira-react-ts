@@ -3,7 +3,7 @@ import { List } from './list'
 import React from 'react'
 import { useDebounce, useDocumentTitle } from 'utils'
 import styled from '@emotion/styled'
-import { useProject } from 'utils/project'
+import { useProjects } from 'utils/project'
 import { useUsers } from 'utils/user'
 import { useProjectsSearchParams } from './util'
 import { Row } from 'antd'
@@ -13,7 +13,7 @@ import { useProjectModal } from 'utils/url'
 export const ProjectListScreen = () => {
   const [param, setParam] = useProjectsSearchParams()
   const debouncedParam = useDebounce(param, 200)
-  const { isLoading, data: list, retry } = useProject(debouncedParam)
+  const { isLoading, data: list } = useProjects(debouncedParam)
   const { open } = useProjectModal()
 
   const { data: users } = useUsers()
@@ -28,7 +28,7 @@ export const ProjectListScreen = () => {
         </ButtonNoPadding>
       </Row>
       <SearchPanel param={param} setParam={setParam} users={users || []} />
-      <List refresh={retry} dataSource={list || []} users={users || []} loading={isLoading} />
+      <List dataSource={list || []} users={users || []} loading={isLoading} />
     </Container>
   )
 }
