@@ -13,3 +13,8 @@ export const useProjectsSearchParams = () => {
 
   return [projectsParam, setParam] as const
 }
+
+export const useProjectsQueryKey = () => {
+  const [params] = useProjectsSearchParams()
+  return ['projects', params]
+}

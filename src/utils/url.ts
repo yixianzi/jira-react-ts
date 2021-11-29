@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { useSearchParams, URLSearchParamsInit } from 'react-router-dom'
+import { useProjectsSearchParams } from 'screens/project-list/util'
 import { cleanObject } from 'utils'
 import { useProject } from './project'
 /**
