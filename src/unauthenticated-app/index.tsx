@@ -1,4 +1,4 @@
-import { Card, Divider, Button, Typography } from 'antd'
+import { Card, Divider, Button } from 'antd'
 import React, { useState } from 'react'
 import { LoginScreen } from './login'
 import { RegisterScreen } from './register'

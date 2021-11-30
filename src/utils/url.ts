@@ -1,13 +1,13 @@
 import { useMemo } from 'react'
 import { useSearchParams, URLSearchParamsInit } from 'react-router-dom'
-import { useProjectsSearchParams } from 'screens/project-list/util'
 import { cleanObject } from 'utils'
 import { useProject } from './project'
 /**
  * 返回页面url中，指定建的参数值
  */
 export const useUrlQueryParam = <K extends string>(keys: K[]) => {
-  const [searchParams, setSearchParam] = useSearchParams()
+  const [searchParams] = useSearchParams()
+  const setSearchParams = useSetUrlSearchParam()
   return [
     useMemo(
       () =>
@@ -18,30 +18,39 @@ export const useUrlQueryParam = <K extends string>(keys: K[]) => {
       [searchParams]
     ),
     (params: Partial<{ [key in K]: unknown }>) => {
-      // fromEntries，iterator 遍历器，设置新的url
-      const o = cleanObject({
-        ...Object.fromEntries(searchParams),
-        ...params
-      }) as URLSearchParamsInit
-      return setSearchParam(o)
+      return setSearchParams(params)
     }
   ] as const
+}
+
+export const useSetUrlSearchParam = () => {
+  const [searchParams, setSearchParam] = useSearchParams()
+  return (params: { [key in string]: unknown }) => {
+    // fromEntries，iterator 遍历器，设置新的url
+    const o = cleanObject({
+      ...Object.fromEntries(searchParams),
+      ...params
+    }) as URLSearchParamsInit
+    return setSearchParam(o)
+  }
 }
 
 export const useProjectModal = () => {
   const [{ projectCreate }, setProjectCreate] = useUrlQueryParam(['projectCreate'])
   const [{ editingProjectId }, setEditingProjectId] = useUrlQueryParam(['editingProjectId'])
+  const setUrlParams = useSetUrlSearchParam()
   const { data: editingProject, isLoading } = useProject(Number(editingProjectId))
 
   const open = () => setProjectCreate({ projectCreate: true })
-  const close = () => {
-    // undo? 两个指令写在一块第一行的那个会不生效（实际上是生效的，但好像又跳转了）
-    if (projectCreate) {
-      setProjectCreate({ projectCreate: undefined })
-    } else {
-      setEditingProjectId({ editingProjectId: undefined })
-    }
-  }
+  // const close = () => {
+  //   // undo? 两个指令写在一块第一行的那个会不生效（实际上是生效的，但好像又跳转了）
+  //   if (projectCreate) {
+  //     setProjectCreate({ projectCreate: undefined })
+  //   } else {
+  //     setEditingProjectId({ editingProjectId: undefined })
+  //   }
+  // }
+  const close = () => setUrlParams({ projectCreate: '', editingProjectId: '' })
   const startEdit = (id: number) => setEditingProjectId({ editingProjectId: id })
 
   // 返回三个以下时，可以返回tuple，三个以上考虑对象
