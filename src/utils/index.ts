@@ -50,6 +50,9 @@ export const useDebounce = <V>(value: V, delay?: number) => {
       setDebounceParam(value)
     }, delay)
     // 每次在上一个useEffect处理完之后再运行
+    // return函数运行时机
+    // 1. 在组件卸载的时候运行
+    // 2. 下次运行用useEffect的时候
     return () => clearTimeout(timer)
   }, [value, delay])
   return debounceParam

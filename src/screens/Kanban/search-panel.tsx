@@ -23,7 +23,7 @@ export const SearchPanel = () => {
       <Input
         style={{ width: '20rem' }}
         placeholder={'任务名'}
-        value={searchParams.name}
+        // value={searchParams.name}
         onChange={(evt) => setSearchParmas({ name: evt.target.value })}
       />
       <UserSelect
