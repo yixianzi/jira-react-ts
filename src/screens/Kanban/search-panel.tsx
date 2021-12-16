@@ -2,13 +2,14 @@ import { Button, Input } from 'antd'
 import { Row } from 'components/lib'
 import { TaskTypeSelect } from 'components/task-type-select'
 import { UserSelect } from 'components/use-select'
-import React from 'react'
+import React, { useState } from 'react'
 import { useSetUrlSearchParam } from 'utils/url'
 import { useTasksSearchParams } from './util'
 
 export const SearchPanel = () => {
   const searchParams = useTasksSearchParams()
   const setSearchParmas = useSetUrlSearchParam()
+  const [inputName, setInputName] = useState('')
   const reset = () => {
     setSearchParmas({
       typeId: undefined,
@@ -16,6 +17,7 @@ export const SearchPanel = () => {
       tagId: undefined,
       name: undefined
     })
+    setInputName('')
   }
 
   return (
@@ -23,8 +25,11 @@ export const SearchPanel = () => {
       <Input
         style={{ width: '20rem' }}
         placeholder={'任务名'}
-        // value={searchParams.name}
-        onChange={(evt) => setSearchParmas({ name: evt.target.value })}
+        value={inputName}
+        onChange={(evt) => {
+          setSearchParmas({ name: evt.target.value })
+          setInputName(evt.target.value)
+        }}
       />
       <UserSelect
         defaultOptionName={'经办人'}
