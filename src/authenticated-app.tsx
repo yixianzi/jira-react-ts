@@ -35,7 +35,7 @@ const PageHeader = () => {
     <Header between={true}>
       <HeaderLeft gap={true}>
         <ButtonNoPadding style={{ padding: 0 }} type={'link'} onClick={resetRoute}>
-          <SoftwareLogo width={'18rem'} color={'rgb(38,132,255'} />
+          <SoftwareLogo width={'18rem'} color={'rgb(38,132,255)'} />
         </ButtonNoPadding>
         <ProjectPopover />
         <span>用户</span>
